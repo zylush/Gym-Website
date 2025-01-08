@@ -1,12 +1,11 @@
-```php
 <?php
 session_start();
+// redirect password
 if (!isset($_SESSION['user'])) {
     header("Location: index.php");
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +19,13 @@ if (!isset($_SESSION['user'])) {
 <!-- SIDEBAR -->
     <?php include 'partials/app-sidebar.php'; ?>
     <div class="main">
+
+        <!-- TOP NAVIGATION -->
         <div class="header">
             <h1>Dashboard</h1>
-            <button class="logout">Logout</button>
+            <a href= "database/logout.php"><button class="logout">Logout</button></a>
         </div>
+
         <div class="content">
             <!-- Membership Overview -->
             <section id="membership-overview" class="active">
@@ -117,7 +119,7 @@ if (!isset($_SESSION['user'])) {
                 </ul>
             </section>
 
-            <!-- Sales Report -->
+            <!-- Sales Report 
             <section id="sales-report">
                 <h2>Sales Report</h2>
                 <div id="sales-data">
@@ -128,6 +130,7 @@ if (!isset($_SESSION['user'])) {
                     <?php endif; ?>
                 </div>
             </section>
+                    -->
         </div>
     </div>
     

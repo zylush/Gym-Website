@@ -8,6 +8,6 @@
             <li><a href="#" data-section="add-member">Add Member</a></li>
             <li><a href="#" data-section="sessions-classes">Sessions/Classes</a></li>
             <li><a href="#" data-section="task">Task</a></li>
-            <li><a href="#" data-section="sales-report">Sales Report</a></li>
+            <!-- <li><a href="#" data-section="sales-report">Sales Report</a></li> -->
         </ul>
 </div>

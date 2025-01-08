@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     sidebarLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Remove 'active' class from all links and sections
             sidebarLinks.forEach(link => link.classList.remove('active'));
             sections.forEach(section => section.classList.remove('active'));
@@ -19,5 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Set the default active section to be Membership Overview
-    document.querySelector('.menu li a.active').click();
+    const defaultActiveLink = document.querySelector('.menu li a.active');
+    if (defaultActiveLink) {
+        defaultActiveLink.click();
+    }
 });

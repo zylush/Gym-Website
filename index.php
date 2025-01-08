@@ -2,6 +2,11 @@
 session_start();  // Start the session to store user data
 include 'database/db.php'; // Include the database connection
 
+if (!isset($_SESSION['user'])) {
+    header("Location: dashboard.php");
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']); // Retrieve email as username
     $password = trim($_POST['password']); // Retrieve password
@@ -15,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user) {
         //var_dump($user['password']); // Should display the hashed password
         //var_dump($password);  
-        // Validate the password
+        // Validate the password w/o using hash
         if ($password === $user['password']) {
             // Password is correct; set session and redirect to dashboard
             $_SESSION['user'] = $user['email'];  // Store user email in session
@@ -37,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Dstars Fitness Gym</title>
     <style>
         /* General Styles */
-        body {
+        .index-body {
             background: linear-gradient(to right, black, red, black);
             font-family: 'Arial', sans-serif;
             color: white;
@@ -46,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     
         /* Header */
-        .header {
+        .index-header {
             background: rgba(0, 0, 0, 0.9);
             padding: 1rem 0;
             position: sticky;
@@ -55,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
     
-        .header .container {
+        .index-header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -200,7 +205,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     
         /* Footer */
-        .footer {
+        .index-footer {
             background: black;
             padding: 1rem;
             text-align: center;
@@ -208,8 +213,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
-<body>
-    <header class="header">
+<body class="index-body">
+    <header class="index-header">
         <div class="container">
             <h1 class="logo">Dstars Fitness Gym</h1>
             <nav class="nav">
@@ -264,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Visit us: <strong>Brgy. Lagao (fronting Robinsons Malls)</strong></p>
     </section>
 
-    <footer class="footer">
+    <footer class="index-footer">
         <p>&copy; 2024 Dstars Fitness Gym. Built to inspire and achieve!</p>
     </footer>
 
