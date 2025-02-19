@@ -2,7 +2,7 @@
 session_start();  // Start the session to store user data
 include 'database/db.php'; // Include the database connection
 
-if (!isset($_SESSION['user'])) {
+if (isset($_SESSION['user'])) {
     header("Location: dashboard.php");
     exit;
 }
