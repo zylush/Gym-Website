@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dstars Fitness Gym Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="module" src="js/firebaseauth.js"></script>
+    <script defer src="js/script.js"></script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="images/logo.png" alt="Dstars Fitness Gym Logo">
+            <h1>Dstars Fitness</h1>
+        </div>
+        <ul class="menu">
+            <li><a href="#" class="active" data-section="dashboard-overview"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#" data-section="membership-overview"><i class="fas fa-users"></i> Members</a></li>
+            <li><a href="#" data-section="staff-overview"><i class="fas fa-user-tie"></i> Staff</a></li>
+            <!-- Removed the "Classes" section -->
+            <li><a href="#" data-section="task"><i class="fas fa-tasks"></i> Tasks</a></li>
+            <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p id="user-name">Admin User</p>
+            <a href="database/logout.php" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <!-- TOP NAVIGATION -->
+        <div class="header">
+            <div class="header-left">
+                <button id="toggle-sidebar" class="toggle-btn"><i class="fas fa-bars"></i></button>
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filter-dropdown">
+                    <button class="notification-badge"><i class="fas fa-filter"></i> </button>
+                    <div class="filter-content">
+                        <a href="#">Member Notifications</a>
+                        <a href="#">Member Termination </a>
+                        <a href="#">Expired</a>
+                        <a href="#">New (Last 30 days)</a>
+                    </div>
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="profile">
+                    <img src="images/profile.jpg" alt="Profile" class="profile-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Dashboard Overview -->
+            <section id="dashboard-overview" class="active">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Members</h3>
+                            <p id="total-members">0</p>
+                            <span class="trend up"><i class="fas fa-arrow-up"></i> 5%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="stat-info">
+                            <h3>Staff Members</h3>
+                            <p id="total-staff">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-info">
+                            <h3>Today's Sessions</h3>
+                            <p id="today-sessions">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card attendance-chart">
+                        <h3><i class="fas fa-chart-bar"></i> Weekly Attendance</h3>
+                        <div id="attendance-chart" class="chart-container">
+                            <!-- Chart will be loaded here via JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card quick-tasks">
+                        <h3><i class="fas fa-tasks"></i> Quick Tasks</h3>
+                        <div class="task-form">
+                            <input type="text" id="quick-task-input" placeholder="Add a new task...">
+                            <button id="add-quick-task"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <ul id="quick-task-list">
+                            <li>
+                                <input type="checkbox" id="task1">
+                                <label for="task1">Call new members for follow-up</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="task2">
+                                <label for="task2">Order new equipment</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="task3">
+                                <label for="task3">Schedule staff meeting</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dashboard-card new-members">
+                        <h3><i class="fas fa-user-plus"></i> New Members</h3>
+                        <ul id="new-members-list">
+                            <li>
+                                <img src="images/user1.jpg" alt="User">
+                                <div class="member-details">
+                                    <h4>Sarah Johnson</h4>
+                                    <p>Joined: Today</p>
+                                </div>
+                                <button class="view-btn">View</button>
+                            </li>
+                            <li>
+                                <img src="images/user2.jpg" alt="User">
+                                <div class="member-details">
+                                    <h4>Robert Williams</h4>
+                                    <p>Joined: Yesterday</p>
+                                </div>
+                                <button class="view-btn">View</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Membership Overview -->
+            <section id="membership-overview">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Membership Overview</h2>
+                    <div class="header-actions">
+                        <button class="action-btn" id="add-member-btn">
+                            <i class="fas fa-plus"></i> Add Member
+                        </button>
+                        <div class="filter-dropdown">
+                            <button class="filter-btn"><i class="fas fa-filter"></i> Filter</button>
+                            <div class="filter-content">
+                                <a href="#">All Members</a>
+                                <a href="#">Active</a>
+                                <a href="#">Expired</a>
+                                <a href="#">New (Last 30 days)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="search-filter-bar">
+                    <div class="search-bar">
+                        <input type="text" id="member-search" placeholder="Search members...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                
+                <div class="members-table-container">
+                    <table class="data-table" id="members-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Membership</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Expiry Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-list">
+                            <!-- Member data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <script>
+                document.getElementById("add-member-btn").addEventListener("click", function() {
+                    window.location.href = "file:///C:/Users/admin/Downloads/gym2-20250324T163634Z-001/gym2/addmember.html"; // Replace with actual URL
+                });
+            </script>
+            
+            <!-- Staff Overview -->
+            <section id="staff-overview">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-tie"></i> Staff Overview</h2>
+                    <div class="header-actions">
+                        <button class="action-btn" id="add-staff-btn"><i class="fas fa-plus"></i> Add Staff</button>
+                    </div>
+                </div>
+                
+                <div class="search-filter-bar">
+                    <div class="search-bar">
+                        <input type="text" id="staff-search" placeholder="Search staff...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                
+                <div class="staff-table-container">
+                    <table class="data-table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-list">
+                            <!-- Staff data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <script>
+                document.getElementById("add-staff-btn").addEventListener("click", function() {
+                    window.location.href = "file:///C:/Users/admin/Downloads/gym2-20250324T163634Z-001/gym2/addstaff.html"; // Replace with actual URL
+                });
+            </script>
+
+            <!-- Add Member Modal -->
+            <section id="add-member">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-plus"></i> Add New Member</h2>
+                </div>
+                
+                <form id="create-member-form" class="form-grid" action="database/signup.php" method="POST">
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-of-birth">Date of Birth</label>
+                        <input type="date" id="date-of-birth">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-number">Phone Number</label>
+                        <input type="text" id="phone-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address">
+                    </div>
+                    <div class="form-group">
+                        <label for="membership-type">Membership Type</label>
+                        <select id="membership-type" required>
+                            <option value="">Select</option>
+                            <option value="basic">Basic</option>
+                            <option value="standard">Standard</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-date">Start Date</label>
+                        <input type="date" id="start-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency-contact">Emergency Contact</label>
+                        <input type="text" id="emergency-contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="health-conditions">Health Conditions</label>
+                        <textarea id="health-conditions" rows="3"></textarea>
+                    </div>
+                    <div class="form-group photo-upload">
+                        <label for="member-photo">Photo</label>
+                        <input type="file" id="member-photo" accept="image/*">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancel-member">Cancel</button>
+                        <button type="submit" class="submit-btn">Sign Up</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Task Management -->
+            <section id="task">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> Task Management</h2>
+                    <div class="header-actions">
+                        <button class="action-btn" id="add-task-btn"><i class="fas fa-plus"></i> Add Task</button>
+                    </div>
+                </div>
+                
+                <div class="task-board">
+                    <div class="task-column">
+                        <h3>To Do</h3>
+                        <div class="task-list" id="todo-list">
+                            <!-- To Do tasks will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="task-column">
+                        <h3>In Progress</h3>
+                        <div class="task-list" id="progress-list">
+                            <!-- In Progress tasks will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="task-column">
+                        <h3>Completed</h3>
+                        <div class="task-list" id="completed-list">
+                            <!-- Completed tasks will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings -->
+            <section id="settings">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                </div>
+                
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Account Settings</h3>
+                        <form id="account-settings-form">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" value="admin">
+                            </div>
+                            <div class="form-group">
+                                <label for="email-settings">Email</label>
+                                <input type="email" id="email-settings" value="admin@dstarsfitness.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password</label>
+                                <input type="password" id="confirm-password">
+                            </div>
+                            <button type="submit" class="submit-btn">Save Changes</button>
+                        </form>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Gym Settings</h3>
+                        <form id="gym-settings-form">
+                            <div class="form-group">
+                                <label for="gym-name">Gym Name</label>
+                                <input type="text" id="gym-name" value="Dstars Fitness Gym">
+                            </div>
+                            <div class="form-group">
+                                <label for="gym-address">Address</label>
+                                <input type="text" id="gym-address" value="Address">
+                            </div>
+                            <div class="form-group">
+                                <label for="gym-phone">Phone</label>
+                                <input type="text" id="gym-phone" value="Num">
+                            </div>
+                            <div class="form-group">
+                                <label for="gym-hours">Operating Hours</label>
+                                <input type="text" id="gym-hours" value="Num">
+                            </div>
+                            <button type="submit" class="submit-btn">Save Changes</button>
+                        </form>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>System Settings</h3>
+                        <form id="system-settings-form">
+                            <div class="form-group">
+                                <label for="theme">Theme</label>
+                                <select id="theme">
+                                    <option value="default">Default</option>
+                                    <option value="dark">Dark Mode</option>
+                                    <option value="light">Light Mode</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="notifications">Notifications</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="notifications" checked>
+                                    <label for="notifications" class="toggle-label"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="data-backup">Automatic Backup</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="data-backup" checked>
+                                    <label for="data-backup" class="toggle-label"></label>
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal" id="add-class-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Class</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-class-form">
+                    <!-- Form fields for adding a class -->
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="add-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Task</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-task-form">
+                    <!-- Form fields for adding a task -->
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Ensure proper redirection for the "Log In" button
+        document.querySelector(".logout-link").addEventListener("click", function (event) {
+            event.preventDefault();
+            window.location.href = "login.html"; // Replace with the actual login page URL
+        });
+
+        // Ensure proper redirection for the "Sign Up" button
+        document.getElementById("create-member-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const actionUrl = form.getAttribute("action");
+            window.location.href = actionUrl; // Redirect to the signup processing page
+        });
+    </script>
+</body>
+</html>

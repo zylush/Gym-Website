@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #000000, #5a0000);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.5);
+            width: 390px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #ff4444;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            text-align: left;
+        }
+        input, select {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .save-btn {
+            background: #ff0000;
+            color: white;
+        }
+        .save-btn:hover {
+            background: #cc0000;
+        }
+        .cancel-btn {
+            background: #444;
+            color: white;
+        }
+        .cancel-btn:hover {
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-user-plus"></i> Add Staff</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter full name" required>
+            
+            <label for="id">Staff ID:</label>
+            <input type="text" id="id" placeholder="Enter Staff ID" required>
+            
+          
+            <label for="join-date">Join Date:</label>
+            <input type="date" id="join-date" required>
+            
+            <label for="expiry-date">Expiry Date:</label>
+            <input type="date" id="expiry-date" required>
+            
+            <button type="submit" class="save-btn">Save Staff</button>
+            <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>

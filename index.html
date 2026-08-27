@@ -1,0 +1,648 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="js/firebaseauth.js"defer></script>
+    <title>Dstars Fitness Gym</title>
+    <style>
+        /* General Styles */
+        .index-body {
+            background: linear-gradient(to right, #121212, #2d1a20, #121212);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+    
+        /* Header */
+        .index-header {
+            background: rgba(18, 18, 18, 0.95);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+    
+        .index-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+    
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e63946;
+            text-shadow: 0 0 5px rgba(230, 57, 70, 0.3);
+        }
+    
+        .nav ul {
+            display: flex;
+            list-style: none;
+        }
+    
+        .nav ul li {
+            margin-left: 1.5rem;
+        }
+    
+        .nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+    
+        .nav ul li a:hover {
+            color: #e63946;
+        }
+    
+        /* Section Styles */
+        section {
+            padding: 3rem 1rem;
+            text-align: center;
+            display: none; /* Initially hidden */
+        }
+    
+        section.active {
+            display: block; /* Visible when active */
+        }
+    
+        /* Hero Section */
+        .hero {
+            padding: 5rem 1rem;
+            background: linear-gradient(135deg, #1a1a1a, #2d1a20, #1a1a1a);
+            box-shadow: inset 0 0 50px rgba(230, 57, 70, 0.1);
+        }
+    
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #f1faee;
+            text-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
+        }
+    
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #f1faee;
+        }
+    
+        /* Authentication Container */
+        .auth-container {
+            background: rgba(26, 26, 26, 0.9);
+            margin: 2rem auto;
+            border-radius: 10px;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(230, 57, 70, 0.2);
+            height: auto;
+            border: 1px solid rgba(230, 57, 70, 0.1);
+        }
+    
+        .auth-container h2 {
+            font-size: 2rem;
+            color: #e63946;
+            margin-bottom: 1rem;
+        }
+    
+        .auth-container form {
+            margin-top: 1rem;
+        }
+    
+        .auth-container label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+    
+        .auth-container input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+    
+        .auth-container input:focus {
+            outline: none;
+            border: 1px solid #e63946;
+            box-shadow: 0 0 5px rgba(230, 57, 70, 0.3);
+        }
+    
+        .auth-container button {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            background: rgba(26, 26, 26, 0.7);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+    
+        .auth-container button:hover {
+            background: rgba(26, 26, 26, 0.9);
+            border-color: #e63946;
+        }
+        
+        /* Auth tabs - for switching between login and signup */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.8rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: white;
+            border-bottom: 3px solid #e63946;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(230, 57, 70, 0.1);
+        }
+
+        .auth-tab:hover {
+            background: rgba(230, 57, 70, 0.05);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-message {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .auth-link {
+            color: #e63946;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+            color: #f48c91;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .auth-divider:before,
+        .auth-divider:after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-divider span {
+            padding: 0 10px;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+            cursor: pointer;
+            /*display: flex;*/
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Updated password field styles */
+        .password-field {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .password-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input-container .toggle-password {
+            width: 8%;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            border-radius: 50%;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 8px 0;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+        
+        .password-input-container .toggle-password:hover {
+            color: #e63946;
+        }
+
+        .password-field input {
+            padding-right: 40px; /* Make space for the button */
+            margin-bottom: 0; /* Remove the bottom margin from input, it's on the parent now */
+        }
+    
+        /* About, Services, and Contact Section - Adjusting font size */
+        #about, #services, #contact {
+            font-size: 1.5rem; /* Match font size of body in 'Home' */
+            background: linear-gradient(135deg, #1a1a1a, #2d1a20, #1a1a1a);
+            border-top: 1px solid rgba(230, 57, 70, 0.1);
+            border-bottom: 1px solid rgba(230, 57, 70, 0.1);
+        }
+        
+        #about h2, #services h2, #contact h2 {
+            color: #e63946;
+            text-shadow: 0 0 5px rgba(230, 57, 70, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        #services ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        #services li {
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            background: rgba(26, 26, 26, 0.7);
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 200px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(230, 57, 70, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        #services li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border-color: rgba(230, 57, 70, 0.3);
+        }
+    
+        /* Footer */
+        .index-footer {
+            background: #121212;
+            padding: 1.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(230, 57, 70, 0.1);
+        }
+
+        /* Error message */
+        .auth-error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 0.8rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+            border-left: 3px solid #ff6b6b;
+        }
+
+        /* Improved submit buttons */
+        .submit-btn {
+            background: #e63946 !important;
+            color: white !important;
+            border: none !important;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+            transition: all 0.3s ease !important;
+            cursor: pointer; /* Ensure buttons are responsive */
+        }
+
+        .submit-btn:hover {
+            background: #d62b39 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(230, 57, 70, 0.4) !important;
+        }
+
+        /* Style for service buttons */
+        .service-btn {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .service-btn:hover {
+            background: #d62b39;
+        }
+
+        /* Style for service details */
+        .service-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .service-details p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="index-body">
+    <header class="index-header">
+        <div class="container">
+            <h1 class="logo">Dstars Fitness Gym</h1>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero active">
+        <h2>Push Your Limits</h2>
+        <p>Join the best fitness community and achieve your goals with Dstars Fitness Gym!</p>
+        <div class="auth-container" id="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="login-tab">Login</button>
+                <button class="auth-tab" id="signup-tab">Sign Up</button>
+            </div>
+            
+            <div class="auth-error" id="auth-error"></div>
+            
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="email" placeholder="Enter your email" required>
+                
+                <div class="password-field">
+                    <label for="login-password">Password:</label>
+                    <div class="password-input-container">
+                        <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                        <button type="button" class="toggle-password" id="toggle-login-password">🔒</button>
+                    </div>
+                </div>
+                
+                <button type="submit" id="login-button" class="submit-btn">Login</button>
+                <div class="auth-message">
+                    Forgot your password? <a href="#" class="auth-link">Reset it here</a>
+                </div>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signup-form" class="auth-form">
+                <h2>Create an Account</h2>
+                <label for="signup-name">Full Name:</label>
+                <input type="text" id="signup-name" name="name" placeholder="Enter your full name" required>
+                
+                <label for="signup-email">Email:</label>
+                <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+                
+                <div class="password-field">
+                    <label for="signup-password">Password:</label>
+                    <div class="password-input-container">
+                        <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+                        <button type="button" class="toggle-password" id="toggle-signup-password">🔒</button>
+                    </div>
+                </div>
+                
+                <div class="password-field">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <div class="password-input-container">
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                        <button type="button" class="toggle-password" id="toggle-confirm-password">🔒</button>
+                    </div>
+                </div>
+                
+                <button type="submit" id="signup-button" class="submit-btn">Sign Up</button>
+                <div class="auth-message">
+                    By signing up, you agree to our <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>At Dstars Fitness Gym, we redefine fitness with top-notch equipment, expert trainers, and a welcoming atmosphere. Transform your body and mind today!</p>
+        <p>Our mission is to inspire and empower individuals to achieve their fitness goals through personalized training and a supportive community.</p>
+    </section>
+
+    <section id="services">
+    <h2>Our Services</h2>
+    <ul>
+        <li>
+            Strength Training
+            <button class="service-btn" data-service="strength-training">Details</button>
+            <div class="service-details" id="strength-training-details" style="display: none;">
+                <p><strong>Price:</strong> /month</p>
+                <p><strong>Time:</strong> 6:00 AM - 10:00 PM</p>
+                <p><strong>Schedule:</strong> Monday to Saturday</p>
+                <p><strong>Trainer Availability:</strong> Available on request</p>
+                <p><strong>Muscle Components:</strong> Arms, Chest, Back, Legs</p>
+            </div>
+        </li>
+        <li>
+            High-Intensity Workouts
+            <button class="service-btn" data-service="hiit">Details</button>
+            <div class="service-details" id="hiit-details" style="display: none;">
+                <p><strong>Price:</strong> /month</p>
+                <p><strong>Time:</strong> 7:00 AM - 9:00 PM</p>
+                <p><strong>Schedule:</strong> Monday, Wednesday, Friday</p>
+                <p><strong>Trainer Availability:</strong> Group sessions</p>
+                <p><strong>Muscle Components:</strong> Full Body</p>
+            </div>
+        </li>
+        <li>
+            Yoga and Mindfulness
+            <button class="service-btn" data-service="yoga">Details</button>
+            <div class="service-details" id="yoga-details" style="display: none;">
+                <p><strong>Price:</strong> Free for members, 200 pesos per class for non-members</p>
+                <p><strong>Time:</strong> 7:00 AM - 8:00 AM</p>
+                <p><strong>Schedule:</strong> Monday, Wednesday, Friday</p>
+                <p><strong>Trainer Availability:</strong>Dedicated personal trainer </p>
+                <p><strong>Muscle Components:</strong> Core, Flexibility, Relaxation</p>
+            </div>
+        </li>
+        <li>
+            Personalized Coaching
+            <button class="service-btn" data-service="coaching">Details</button>
+            <div class="service-details" id="coaching-details" style="display: none;">
+                <p><strong>Price:</strong> /month</p>
+                <p><strong>Time:</strong> Flexible</p>
+                <p><strong>Schedule:</strong> By appointment</p>
+                <p><strong>Trainer Availability:</strong> Dedicated personal trainer</p>
+                <p><strong>Muscle Components:</strong> Customized to your goals</p>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<section id="contact">
+    <h2>Get in Touch</h2>
+    <p>Email: <strong></strong></p>
+    <p>Phone: <strong>+63 998 848 5858</strong></p>
+    <p>Visit us: <strong>Brgy. Lagao (fronting Robinsons Malls)</strong></p>
+    <p>Follow us on social media for updates and promotions!</p>
+</section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Section navigation
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav ul li a');
+
+            function showSection(id) {
+                sections.forEach(section => {
+                    section.classList.toggle('active', section.id === id); // Show the target section
+                });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent default anchor behavior
+                    const targetId = this.getAttribute('href').substring(1); // Get the target section ID
+                    showSection(targetId); // Show the corresponding section
+                });
+            });
+
+            // Ensure the "Home" section is visible by default
+            showSection('home');
+
+            // Toggle service details
+            const serviceButtons = document.querySelectorAll('.service-btn');
+            serviceButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const serviceId = this.getAttribute('data-service');
+                    const details = document.getElementById(`${serviceId}-details`);
+                    if (details.style.display === 'none') {
+                        details.style.display = 'block';
+                    } else {
+                        details.style.display = 'none';
+                    }
+                });
+            });
+
+            // Handle Login button click
+            document.getElementById("login-button").addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent form submission
+                const email = document.getElementById("login-email").value;
+                const password = document.getElementById("login-password").value;
+
+                if (email && password) {
+                    // Redirect to dashboard (for demonstration purposes)
+                    window.location.href = "./dashboard.html";
+                } else {
+                    alert("Please fill in all fields.");
+                }
+            });
+
+            // Handle Sign Up button click
+            document.getElementById("signup-button").addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent form submission
+                const name = document.getElementById("signup-name").value;
+                const email = document.getElementById("signup-email").value;
+                const password = document.getElementById("signup-password").value;
+                const confirmPassword = document.getElementById("confirm-password").value;
+
+                if (name && email && password && confirmPassword) {
+                    if (password === confirmPassword) {
+                        alert("Account created successfully!");
+                        // Redirect or handle sign-up logic here
+                    } else {
+                        alert("Passwords do not match.");
+                    }
+                } else {
+                    alert("Please fill in all fields.");
+                }
+            });
+
+            const loginTab = document.getElementById('login-tab');
+            const signupTab = document.getElementById('signup-tab');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+
+            // Toggle between Login and Sign Up forms
+            loginTab.addEventListener('click', function () {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+            });
+
+            signupTab.addEventListener('click', function () {
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
